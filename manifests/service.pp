@@ -8,9 +8,11 @@ class pulp::service {
     }
   }
 
+  $messaging_service = $broker::broker_service 
+
   service { 'pulp_celerybeat':
     ensure     => running,
-    require    => [Service[mongodb], Service[qpidd]],
+    require    => [Service[mongodb], Service[$messaging_service]],
     enable     => true,
     hasstatus  => true,
     hasrestart => true,
@@ -18,7 +20,7 @@ class pulp::service {
 
   service { 'pulp_workers':
     ensure     => running,
-    require    => [Service[mongodb], Service[qpidd]],
+    require    => [Service[mongodb], Service[$messaging_service]],
     enable     => true,
     hasstatus  => true,
     hasrestart => true,
@@ -27,7 +29,7 @@ class pulp::service {
 
   service { 'pulp_resource_manager':
     ensure     => running,
-    require    => [Service[mongodb], Service[qpidd]],
+    require    => [Service[mongodb], Service[$messaging_service]],
     enable     => true,
     hasstatus  => true,
     hasrestart => true,
